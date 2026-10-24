@@ -26,6 +26,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.material3.Button
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.selection.selectable
 import androidx.compose.material3.OutlinedButton
 
 class MainActivity : ComponentActivity() {
@@ -47,7 +48,7 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun CampusCardScreen(modifier: Modifier = Modifier) {
     // Состояние переключателя (toggle)
-    var useSpaceBetween by remember { mutableStateOf(true) }
+    var isTopAligned by remember { mutableStateOf(true) }
 
     Column(
         modifier = modifier
@@ -73,7 +74,7 @@ fun CampusCardScreen(modifier: Modifier = Modifier) {
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            // Расписание
+            // Блок расписания с разным шрифтом (Exercise 3)
             Column(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalAlignment = Alignment.Start
@@ -82,53 +83,31 @@ fun CampusCardScreen(modifier: Modifier = Modifier) {
                     text = "Schedule",
                     style = MaterialTheme.typography.titleMedium
                 )
-                Spacer(modifier = Modifier.height(8.dp))
-                Text(text = "• 09:00 AM - Mobile Development")
-                Text(text = "• 11:00 AM - Database Systems")
-                Text(text = "• 02:00 PM - Discrete Math")
-            }
-        }
-
-        // Нижняя часть (Exercise 2: Action Row + Toggle)
-        Column(modifier = Modifier.fillMaxWidth()) {
-            // Кнопка-переключатель для демонстрации обоих вариантов
-            Button(
-                onClick = { useSpaceBetween = !useSpaceBetween },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 16.dp)
-            ) {
-                Text(text = if (useSpaceBetween) "Mode: SpaceBetween" else "Mode: Center + SpacedBy")
-            }
-
-            // Нижняя строка действий (Action Row)
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = if (useSpaceBetween) {
-                    Arrangement.SpaceBetween
-                } else {
-                    Arrangement.Center
-                },
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                // Если не SpaceBetween, добавляем свойство spacedBy динамически или стилизуем кнопки
-                if (useSpaceBetween) {
-                    OutlinedButton(onClick = { }) { Text("Details") }
-                    Button(onClick = { }) { Text("Share") }
-                } else {
-                    // Используем отдельные отступы или общий Arrangement.spacedBy(16.dp)
-                    Row(
-                        horizontalArrangement = Arrangement.spacedBy(16.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        OutlinedButton(onClick = { }) { Text("Details") }
-                        Button(onClick = { }) { Text("Share") }
-                    }
+                Spacer(modifier = Modifier.height(12.dp))
+                // Кнопка для переключения verticalAlignment
+                Button(
+                    onClick = { isTopAligned = !isTopAligned },
+                    modifier = Modifier.padding(bottom = 12.dp)
+                ) {
+                    Text(text = if (isTopAligned) "Alignment: Top" else "Alignment: CenterVertically")
                 }
+                //Строка расписания с разным размером текста
+                Row (
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = if (isTopAligned) Alignment.Top else Alignment.CenterVertically
+                ) {
+                    Text(text = "09:00 AM", style = MaterialTheme.typography.headlineSmall, color = MaterialTheme.colorScheme.primary)
+                    Spacer(modifier = Modifier.padding(horizontal = 8.dp))
+
+                    //Меньший шрифт для названия предмета
+                    Text(text = "Mobile Development Lab\nRoom 305", style = MaterialTheme.typography.bodyMedium)
+
+                }
+                }
+
+        }
             }
         }
-    }
-}
 @Preview(showBackground = true)
 @Composable
 fun GreetingPreview() {
