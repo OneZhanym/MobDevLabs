@@ -53,47 +53,57 @@ fun CampusCardScreen(modifier: Modifier = Modifier) {
         modifier = modifier
             .fillMaxSize()
             .padding(24.dp),
-        verticalArrangement = Arrangement.SpaceBetween, // Чтобы действия были внизу
+        // Изменение для Exercise 6
+        verticalArrangement = Arrangement.SpaceBetween,
         horizontalAlignment = Alignment.Start
     ) {
-        // Вызов extracted-функции ProfileHeader
+        // 1. Заголовок (Header)
         ProfileHeader(
             name = "Ada Lovelace",
             status = "Student ID: 2026001"
         )
 
-        Spacer(modifier = Modifier.height(24.dp))
+        // 2. Блок расписания (Schedule Block)
+        Column(modifier = Modifier.fillMaxWidth()) {
+            Text(
+                text = "Schedule",
+                style = MaterialTheme.typography.titleMedium
+            )
 
-        // Секция расписания
-        Text(
-            text = "Schedule",
-            style = MaterialTheme.typography.titleMedium
-        )
+            Spacer(modifier = Modifier.height(16.dp))
 
-        Spacer(modifier = Modifier.height(16.dp))
+            ScheduleRow(
+                time = "09:00 AM",
+                title = "Advanced Cross-Platform Mobile Application Development and Architecture",
+                room = "Room 304"
+            )
 
-        // Вызовы extracted-функции ScheduleRow
-        ScheduleRow(
-            time = "09:00 AM",
-            title = "Advanced Cross-Platform Mobile Application Development and Architecture",
-            room = "Room 304"
-        )
+            Spacer(modifier = Modifier.height(12.dp))
 
-        Spacer(modifier = Modifier.height(12.dp))
+            ScheduleRow(
+                time = "11:00 AM",
+                title = "Database Systems",
+                room = "Lab 2"
+            )
 
-        ScheduleRow(
-            time = "11:00 AM",
-            title = "Database Systems",
-            room = "Lab 2"
-        )
+            Spacer(modifier = Modifier.height(12.dp))
 
-        Spacer(modifier = Modifier.height(12.dp))
+            ScheduleRow(
+                time = "02:00 PM",
+                title = "Discrete Math",
+                room = "Room 101"
+            )
+        }
 
-        ScheduleRow(
-            time = "02:00 PM",
-            title = "Discrete Math",
-            room = "Room 101"
-        )
+        // 3. Блок действий / Кнопки (Action Row)
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            OutlinedButton(onClick = { }) { Text("Details") }
+            Button(onClick = { }) { Text("Share") }
+        }
     }
 }
 
