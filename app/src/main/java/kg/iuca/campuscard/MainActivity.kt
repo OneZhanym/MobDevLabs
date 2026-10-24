@@ -56,91 +56,105 @@ fun CampusCardScreen(modifier: Modifier = Modifier) {
         verticalArrangement = Arrangement.SpaceBetween, // Чтобы действия были внизу
         horizontalAlignment = Alignment.Start
     ) {
-            // Заголовок (Exercise 1)
-            Column(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Text(
-                    text = "Campus Card",
-                    style = MaterialTheme.typography.headlineMedium
-                )
-                Text(text = "Ada Lovelace")
-                Text(text = "Student ID: 2026001")
-            }
+        // Вызов extracted-функции ProfileHeader
+        ProfileHeader(
+            name = "Ada Lovelace",
+            status = "Student ID: 2026001"
+        )
 
-            Spacer(modifier = Modifier.height(24.dp))
+        Spacer(modifier = Modifier.height(24.dp))
 
-            // Блок расписания (Exercise 4)
-            Column(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalAlignment = Alignment.Start
-            ) {
-                Text(
-                    text = "Schedule",
-                    style = MaterialTheme.typography.titleMedium
-                )
-                Spacer(modifier = Modifier.height(16.dp))
+        // Секция расписания
+        Text(
+            text = "Schedule",
+            style = MaterialTheme.typography.titleMedium
+        )
 
-                //Строка расписания 1: С очень длинным названием курса
-                Row (
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    // Время (без weight, фиксированное пространство слева)
-                    Text(text = "09:00 AM", style = MaterialTheme.typography.bodyLarge, color = MaterialTheme.colorScheme.primary)
-                    Spacer(modifier = Modifier.width(12.dp))
+        Spacer(modifier = Modifier.height(16.dp))
 
-                    // Название курса с Modifier.weight(1f) - занимает всю гибкую середину
-                    Text(text = "Advanced Cross-Platform Mobile Application Development and Architecture",
-                        style = MaterialTheme.typography.bodyMedium,
-                        modifier = Modifier.weight(1f), // Позволяет тексту занимать всю середину
-                        maxLines = 2,
-                        overflow = TextOverflow.Ellipsis
-                        )
+        // Вызовы extracted-функции ScheduleRow
+        ScheduleRow(
+            time = "09:00 AM",
+            title = "Advanced Cross-Platform Mobile Application Development and Architecture",
+            room = "Room 304"
+        )
 
-                    Spacer(modifier = Modifier.width(12.dp))
+        Spacer(modifier = Modifier.height(12.dp))
 
-                    // Кабинет (без weight, всегда прижат к правому краю и не уходит за экран)
-                    Text(
-                        text = "Room 305",
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.secondary
-                    )
-                }
+        ScheduleRow(
+            time = "11:00 AM",
+            title = "Database Systems",
+            room = "Lab 2"
+        )
 
-                Spacer(modifier = Modifier.height(12.dp))
+        Spacer(modifier = Modifier.height(12.dp))
 
-                //Строка расписания 2: Стандартное короткое название
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        text = "11:00 AM",
-                        style = MaterialTheme.typography.bodyLarge,
-                        color = MaterialTheme.colorScheme.primary
-                    )
-                    Spacer(modifier = Modifier.width(12.dp))
+        ScheduleRow(
+            time = "02:00 PM",
+            title = "Discrete Math",
+            room = "Room 101"
+        )
+    }
+}
 
-                    Text(
-                        text = "Database Systems",
-                        style = MaterialTheme.typography.bodyMedium,
-                        modifier = Modifier.weight(1f)
-                    )
+//Extracted Composable 1: Заголовок профиля
+@Composable
+fun ProfileHeader(
+    name: String,
+    status: String,
+    modifier: Modifier = Modifier
+) {
+    Column(
+        modifier = modifier.fillMaxWidth(),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Text(
+            text = "Campus Card",
+            style = MaterialTheme.typography.headlineMedium
+        )
+        Text(text = name)
+        Text(text = status)
+    }
+}
 
-                    Spacer(modifier = Modifier.width(12.dp))
+// Extracted Composable 2: Строка расписания
+@Composable
+fun ScheduleRow(
+    time: String,
+    title: String,
+    room: String,
+    modifier: Modifier = Modifier
+) {
+    Row(
+        modifier = modifier.fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(
+            text = time,
+            style = MaterialTheme.typography.bodyLarge,
+            color = MaterialTheme.colorScheme.primary
+        )
 
-                    Text(
-                        text = "Lab 2",
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.secondary
-                    )
-                }
-                }
+        Spacer(modifier = Modifier.width(12.dp))
 
-        }
-            }
+        Text(
+            text = title,
+            style = MaterialTheme.typography.bodyMedium,
+            modifier = Modifier.weight(1f),
+            maxLines = 2,
+            overflow = TextOverflow.Ellipsis
+        )
+
+        Spacer(modifier = Modifier.width(12.dp))
+
+        Text(
+            text = room,
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.secondary
+        )
+    }
+}
+
 @Preview(showBackground = true)
 @Composable
 fun GreetingPreview() {
