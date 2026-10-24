@@ -28,6 +28,8 @@ import androidx.compose.material3.Button
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.material3.OutlinedButton
+import androidx.compose.foundation.layout.width
+import androidx.compose.ui.text.style.TextOverflow
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -47,9 +49,6 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun CampusCardScreen(modifier: Modifier = Modifier) {
-    // Состояние переключателя (toggle)
-    var isTopAligned by remember { mutableStateOf(true) }
-
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -57,8 +56,6 @@ fun CampusCardScreen(modifier: Modifier = Modifier) {
         verticalArrangement = Arrangement.SpaceBetween, // Чтобы действия были внизу
         horizontalAlignment = Alignment.Start
     ) {
-        // Верхняя и средняя части Контент
-        Column(modifier = Modifier.fillMaxWidth()) {
             // Заголовок (Exercise 1)
             Column(
                 modifier = Modifier.fillMaxWidth(),
@@ -74,7 +71,7 @@ fun CampusCardScreen(modifier: Modifier = Modifier) {
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            // Блок расписания с разным шрифтом (Exercise 3)
+            // Блок расписания (Exercise 4)
             Column(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalAlignment = Alignment.Start
@@ -83,31 +80,67 @@ fun CampusCardScreen(modifier: Modifier = Modifier) {
                     text = "Schedule",
                     style = MaterialTheme.typography.titleMedium
                 )
-                Spacer(modifier = Modifier.height(12.dp))
-                // Кнопка для переключения verticalAlignment
-                Button(
-                    onClick = { isTopAligned = !isTopAligned },
-                    modifier = Modifier.padding(bottom = 12.dp)
-                ) {
-                    Text(text = if (isTopAligned) "Alignment: Top" else "Alignment: CenterVertically")
-                }
-                //Строка расписания с разным размером текста
+                Spacer(modifier = Modifier.height(16.dp))
+
+                //Строка расписания 1: С очень длинным названием курса
                 Row (
                     modifier = Modifier.fillMaxWidth(),
-                    verticalAlignment = if (isTopAligned) Alignment.Top else Alignment.CenterVertically
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text(text = "09:00 AM", style = MaterialTheme.typography.headlineSmall, color = MaterialTheme.colorScheme.primary)
-                    Spacer(modifier = Modifier.padding(horizontal = 8.dp))
+                    // Время (без weight, фиксированное пространство слева)
+                    Text(text = "09:00 AM", style = MaterialTheme.typography.bodyLarge, color = MaterialTheme.colorScheme.primary)
+                    Spacer(modifier = Modifier.width(12.dp))
 
-                    //Меньший шрифт для названия предмета
-                    Text(text = "Mobile Development Lab\nRoom 305", style = MaterialTheme.typography.bodyMedium)
+                    // Название курса с Modifier.weight(1f) - занимает всю гибкую середину
+                    Text(text = "Advanced Cross-Platform Mobile Application Development and Architecture",
+                        style = MaterialTheme.typography.bodyMedium,
+                        modifier = Modifier.weight(1f), // Позволяет тексту занимать всю середину
+                        maxLines = 2,
+                        overflow = TextOverflow.Ellipsis
+                        )
 
+                    Spacer(modifier = Modifier.width(12.dp))
+
+                    // Кабинет (без weight, всегда прижат к правому краю и не уходит за экран)
+                    Text(
+                        text = "Room 305",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.secondary
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(12.dp))
+
+                //Строка расписания 2: Стандартное короткое название
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = "11:00 AM",
+                        style = MaterialTheme.typography.bodyLarge,
+                        color = MaterialTheme.colorScheme.primary
+                    )
+                    Spacer(modifier = Modifier.width(12.dp))
+
+                    Text(
+                        text = "Database Systems",
+                        style = MaterialTheme.typography.bodyMedium,
+                        modifier = Modifier.weight(1f)
+                    )
+
+                    Spacer(modifier = Modifier.width(12.dp))
+
+                    Text(
+                        text = "Lab 2",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.secondary
+                    )
                 }
                 }
 
         }
             }
-        }
 @Preview(showBackground = true)
 @Composable
 fun GreetingPreview() {
