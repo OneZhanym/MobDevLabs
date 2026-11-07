@@ -4,32 +4,28 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import kg.iuca.campuscard.ui.theme.CampusCardLabTheme
-import androidx.compose.foundation.layout.Column
-import androidx.compose.ui.Alignment
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
-import androidx.compose.material3.Button
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.selection.selectable
-import androidx.compose.material3.OutlinedButton
-import androidx.compose.foundation.layout.width
-import androidx.compose.ui.text.style.TextOverflow
+import kotlin.random.Random
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -38,7 +34,8 @@ class MainActivity : ComponentActivity() {
         setContent {
             CampusCardLabTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    CampusCardScreen(
+                    Greeting(
+                        words = listOf("KOTLIN", "COMPOSE", "ANDROID", "STUDENT"),
                         modifier = Modifier.padding(innerPadding)
                     )
                 }
@@ -48,120 +45,48 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun CampusCardScreen(modifier: Modifier = Modifier) {
-    Column(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(24.dp),
-        // Изменение для Exercise 6
-        verticalArrangement = Arrangement.SpaceBetween,
-        horizontalAlignment = Alignment.Start
-    ) {
-        // 1. Заголовок (Header)
-        ProfileHeader(
-            name = "Ada Lovelace",
-            status = "Student ID: 2026001"
-        )
+fun Greeting(words: List<String>, modifier: Modifier = Modifier) {
+    Column(modifier = modifier) {
+        words.forEachIndexed { rowIndex, word ->
+            // Считаем от 1: index 0 -> 1-я строка (нечётная), index 1 -> 2-я строка (чётная)
+            val rowNumber = rowIndex + 1
+            val isEvenRow = rowNumber % 2 == 0
 
-        // 2. Блок расписания (Schedule Block)
-        Column(modifier = Modifier.fillMaxWidth()) {
-            Text(
-                text = "Schedule",
-                style = MaterialTheme.typography.titleMedium
-            )
+            // 1. Нечётные строки - primary color, чётные — серый
+            val rowBackgroundColor = if (isEvenRow) Color.LightGray else MaterialTheme.colorScheme.primary
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(rowBackgroundColor)
+                    .padding(8.dp),
+                horizontalArrangement = Arrangement.spacedBy(4.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                word.forEachIndexed { letterIndex, char ->
+                    // 2. Для чётных строк случайным образом выбираем жёлтый цвет фона плашки
+                    val isYellowLetter = remember(rowIndex, letterIndex) {
+                        isEvenRow && Random.nextFloat() < 0.4f
+                    }
 
-            ScheduleRow(
-                time = "09:00 AM",
-                title = "Advanced Cross-Platform Mobile Application Development and Architecture",
-                room = "Room 304"
-            )
+                    val boxBackgroundColor = if (isYellowLetter) Color.Yellow else Color.Transparent
 
-            Spacer(modifier = Modifier.height(12.dp))
-
-            ScheduleRow(
-                time = "11:00 AM",
-                title = "Database Systems",
-                room = "Lab 2"
-            )
-
-            Spacer(modifier = Modifier.height(12.dp))
-
-            ScheduleRow(
-                time = "02:00 PM",
-                title = "Discrete Math",
-                room = "Room 101"
-            )
+                    // 3. Плашка буквы
+                    Box(
+                        modifier = Modifier
+                            .size(40.dp)
+                            .background(boxBackgroundColor)
+                            .border(1.dp, Color.Black),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = char.toString(),
+                            color = if (isYellowLetter) Color.Black else if (isEvenRow) Color.Black else Color.White
+                        )
+                    }
+                }
+            }
         }
-
-        // 3. Блок действий / Кнопки (Action Row)
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            OutlinedButton(onClick = { }) { Text("Details") }
-            Button(onClick = { }) { Text("Share") }
-        }
-    }
-}
-
-//Extracted Composable 1: Заголовок профиля
-@Composable
-fun ProfileHeader(
-    name: String,
-    status: String,
-    modifier: Modifier = Modifier
-) {
-    Column(
-        modifier = modifier.fillMaxWidth(),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Text(
-            text = "Campus Card",
-            style = MaterialTheme.typography.headlineMedium
-        )
-        Text(text = name)
-        Text(text = status)
-    }
-}
-
-// Extracted Composable 2: Строка расписания
-@Composable
-fun ScheduleRow(
-    time: String,
-    title: String,
-    room: String,
-    modifier: Modifier = Modifier
-) {
-    Row(
-        modifier = modifier.fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Text(
-            text = time,
-            style = MaterialTheme.typography.bodyLarge,
-            color = MaterialTheme.colorScheme.primary
-        )
-
-        Spacer(modifier = Modifier.width(12.dp))
-
-        Text(
-            text = title,
-            style = MaterialTheme.typography.bodyMedium,
-            modifier = Modifier.weight(1f),
-            maxLines = 2,
-            overflow = TextOverflow.Ellipsis
-        )
-
-        Spacer(modifier = Modifier.width(12.dp))
-
-        Text(
-            text = room,
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.secondary
-        )
     }
 }
 
@@ -169,6 +94,6 @@ fun ScheduleRow(
 @Composable
 fun GreetingPreview() {
     CampusCardLabTheme {
-        CampusCardScreen()
+        Greeting(words = listOf("KOTLIN", "COMPOSE", "ANDROID"))
     }
 }
